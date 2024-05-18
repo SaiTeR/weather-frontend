@@ -1,7 +1,7 @@
 <template>
   <curren-hour-forecast></curren-hour-forecast>
 
-  <div style="display: flex; flex-direction: row">
+  <div style="display: flex; flex-direction: row; margin-top: 1em">
     <today-forecast></today-forecast>
     <future-forecast></future-forecast>
   </div>

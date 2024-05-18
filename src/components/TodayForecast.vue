@@ -60,6 +60,7 @@ export default {
 
 .container{
   border: 1px solid;
+  width: 50%;
 }
 
 .container div {

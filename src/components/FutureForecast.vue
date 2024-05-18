@@ -10,7 +10,7 @@
 
     <div class="next-day-card">
       <p style="text-align: center">{{nextDaysNames[1]}}</p>
-      <div style="display: flex; flex-direction: row">
+      <div style="display: flex; flex-direction: row;">
         <p>{{temperatures[1].maxTemp}} °C </p>
         <p style="margin-left: 1em">{{temperatures[1].minTemp}} °C</p>
       </div>
@@ -108,9 +108,12 @@ export default {
 .container{
   display: flex;
   flex-direction: row;
+  width: 50%;
+
 }
 .next-day-card{
   border: 1px solid;
   margin-left: 1em;
+  width: 50%;
 }
 </style>
