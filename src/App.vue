@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import { mapActions, mapGetters } from 'vuex';
 import CurrenHourForecast from "@/components/CurrentHourForecast.vue";
 import TodayForecast from "@/components/TodayForecast.vue";
 import FutureForecast from "@/components/FutureForecast.vue";
@@ -24,23 +24,18 @@ export default {
     }
   },
 
-  mounted() {
-    this.getWeather();
+  async mounted() {
+    await this.fetchForecast();
   },
 
+  computed: mapGetters([
+    'getForecast'
+  ]),
+
   methods: {
-    getWeather() {
-      axios.get('http://weather.api/api/')
-          .then(response => {
-            console.log(response);
-            this.weatherArray = response.data;
-
-          })
-          .catch(error => {
-            console.error('Error while fetching content:', error);
-          });
-    },
-
+    ...mapActions([
+      'fetchForecast'
+    ]),
 
   }
 }

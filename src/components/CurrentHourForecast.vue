@@ -1,49 +1,50 @@
 <template>
   <div class="container">
 
-    <div class="date">
+    <div class="date" v-if="getCurrentWeather">
       <p>{{ todayDate }}</p>
       <p>Время {{timeNow}}</p>
       <p>{{timeOfDay}}</p>
     </div>
 
-    <div class="curWeather" v-if="currentHourForecast">
-      <p>{{Math.floor(currentHourForecast.temperature)}} °C</p>
+    <div class="curWeather">
+      <p>{{Math.floor(getCurrentWeather.temperature)}} °C</p>
     </div>
 
-    <div class="detailedWeather" v-if="currentHourForecast">
-      <p>Ощущается как: {{Math.floor(currentHourForecast.temperature_feels_like)}} °C</p>
-      <p>Скорость ветра: {{currentHourForecast.wind_speed}} м/с</p>
-      <p>Влажность: {{currentHourForecast.humidity}}%</p>
-      <p>Давление: {{currentHourForecast.pressure}} мм рт. ст.</p>
+    <div class="detailedWeather">
+      <p>Ощущается как: {{Math.floor(getCurrentWeather.temperature_feels_like)}} °C</p>
+      <p>Скорость ветра: {{getCurrentWeather.wind_speed}} м/с</p>
+      <p>Влажность: {{getCurrentWeather.humidity}}%</p>
+      <p>Давление: {{getCurrentWeather.pressure}} мм рт. ст.</p>
     </div>
 
   </div>
 </template>
 
-
-
-
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   name: "CurrenHourForecast",
-
-  mounted() {
-    this.todayDate = this.getTodayDate();
-    this.timeNow = this.getCurrentTime();
-    this.timeOfDay = this.getTimeOfDay();
-
-    this.updateCurrentHourForecast();
-  },
 
   data() {
     return {
       todayDate: "",
       timeNow: "",
       timeOfDay: "",
-      currentHourForecast: null,
     }
   },
+
+  mounted() {
+    this.todayDate = this.getTodayDate();
+    this.timeNow = this.getCurrentTime();
+    this.timeOfDay = this.getTimeOfDay();
+  },
+
+  computed: mapGetters([
+    'getCurrentWeather',
+    'getForecast'
+  ]),
 
   methods: {
     getTodayDate() {
@@ -102,44 +103,7 @@ export default {
 
       return timeOfDay;
     },
-
-    updateCurrentHourForecast() {
-      const weatherArray = this.$parent.$data.weatherArray;
-
-      if (weatherArray && Array.isArray(weatherArray) && weatherArray.length > 1) {
-        const firstArray = weatherArray[1];
-
-        if (Array.isArray(firstArray) && firstArray.length > 0) {
-          this.currentHourForecast = firstArray[0];
-        } else {
-          console.error('Первый вложенный массив не существует или пуст.');
-        }
-      } else {
-        console.error('Массив weatherArray не существует или недостаточно длинный.');
-      }
-    },
-
   },
-
-  watch: {
-    '$parent.$data.weatherArray': {
-      handler(newValue) {
-        this.updateCurrentHourForecast();
-      },
-      deep: true
-    }
-  },
-
-  // computed: {
-  //   formattedTemperature() {
-  //     if (!this.currentHourForecast || this.currentHourForecast.temperature == null) {
-  //       return '';
-  //     }
-  //
-  //     const temperature = this.currentHourForecast.temperature;
-  //     return temperature > 0 ? `+${temperature}` : `${temperature}`;
-  //   }
-  // }
 }
 
 </script>
