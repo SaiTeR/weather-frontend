@@ -1,7 +1,7 @@
 <template>
-  <div class="container">
+  <div class="container" v-if="getCurrentWeather">
 
-    <div class="date" v-if="getCurrentWeather">
+    <div class="date">
       <p>{{ todayDate }}</p>
       <p>Время {{timeNow}}</p>
       <p>{{timeOfDay}}</p>
@@ -13,7 +13,7 @@
 
     <div class="detailedWeather">
       <p>Ощущается как: {{Math.floor(getCurrentWeather.temperature_feels_like)}} °C</p>
-      <p>Скорость ветра: {{getCurrentWeather.wind_speed}} м/с</p>
+      <p>Скорость ветра: {{ getCurrentWeather.wind_speed.toFixed(2) }} м/с</p>
       <p>Влажность: {{getCurrentWeather.humidity}}%</p>
       <p>Давление: {{getCurrentWeather.pressure}} мм рт. ст.</p>
     </div>

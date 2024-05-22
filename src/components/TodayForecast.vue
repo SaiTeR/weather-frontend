@@ -1,58 +1,44 @@
 <template>
-  <div class="container" v-if="dayForecast">
-    <div>
-      <p>Ночь</p> <p>{{}}</p> <p>{{}}</p>
-    </div>
+  <div class="container" v-if="getTodayWeather">
 
-    <div>
-      <p>Утро</p> <p>{{}}</p> <p>{{}}</p>
-    </div>
+    <div v-for="period in getTodayWeather.slice(1)" class="period">
+      <p style="margin-left: 20px">{{getTime(period.datetime_text)}}</p>
+      <p>{{Math.floor(period.temperature)}} °C</p>
+      <p>{{period.wind_speed}} м/с </p>
+      <p>{{period.humidity}}%</p>
+      <p>{{period.pressure}} мм рт. ст.</p>
 
-    <div>
-      <p>День</p> <p>{{}}</p> <p>{{}}</p>
-    </div>
-
-    <div>
-      <p>Вечер</p> <p>{{}}</p> <p>{{}}</p>
     </div>
   </div>
 
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   name: "TodayForecast",
 
   data() {
     return {
-      dayForecast: null,
+
     }
   },
 
   mounted() {
-    console.log("HU!!!!!!")
+
   },
+
+  computed: mapGetters([
+    'getTodayWeather'
+  ]),
 
   methods: {
-    updateDayForecast() {
-      const weatherArray = this.$parent.$data.weatherArray;
-
-      if (weatherArray && Array.isArray(weatherArray) && weatherArray.length > 1) {
-        this.dayForecast = weatherArray[1];
-      }
-    },
-
-
-  },
-
-  watch: {
-    '$parent.$data.weatherArray': {
-      handler(newValue) {
-        this.updateDayForecast();
-      },
-      deep: true
+    getTime(datetimeText) {
+      return datetimeText.split(' ')[1];
     }
   },
+
 }
 </script>
 
@@ -60,12 +46,20 @@ export default {
 
 .container{
   border: 1px solid;
-  width: 50%;
+  width: 45%;
 }
 
 .container div {
   display: flex;
   flex-direction: row;
+}
+.period{
+  border: 1px solid;
+}
+
+
+.period p{
+  padding-right: 50px;
 }
 
 </style>

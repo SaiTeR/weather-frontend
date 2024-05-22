@@ -1,5 +1,5 @@
 <template>
-  <div class="container" v-if="temperatures">
+  <div class="container" v-if="getFutureWeather">
     <div class="next-day-card">
       <p style="text-align: center">{{nextDaysNames[0]}}</p>
       <div style="display: flex; flex-direction: row">
@@ -18,15 +18,26 @@
 
     <div class="next-day-card">
       <p style="text-align: center">{{nextDaysNames[2]}}</p>
-      <div style="display: flex; flex-direction: row">
+      <div style="display: flex; flex-direction: row;">
         <p>{{temperatures[2].maxTemp}} °C </p>
         <p style="margin-left: 1em">{{temperatures[2].minTemp}} °C</p>
       </div>
     </div>
+
+    <div class="next-day-card">
+      <p style="text-align: center">{{nextDaysNames[3]}}</p>
+      <div style="display: flex; flex-direction: row;">
+        <p>{{temperatures[3].maxTemp}} °C </p>
+        <p style="margin-left: 1em">{{temperatures[3].minTemp}} °C</p>
+      </div>
+    </div>
+
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   name: "FutureForecast",
 
@@ -40,6 +51,22 @@ export default {
     }
   },
 
+  computed: mapGetters([
+    'getFutureWeather'
+  ]),
+
+  watch: {
+    getFutureWeather: {
+      immediate: true, // Немедленно вызывает обработчик при привязке
+      handler(newValue) {
+        this.nextDays = newValue;
+        if (this.nextDays) {
+          this.calcDayMinMaxTemp();
+        }
+      }
+    }
+  },
+
   methods: {
     getNextDaysNames() {
       const today = new Date();
@@ -48,9 +75,10 @@ export default {
       const shortDaysNames = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
 
       const nextDaysNames = [
-        shortDaysNames[dayIndex + 1],
-        shortDaysNames[dayIndex + 2],
-        shortDaysNames[dayIndex + 3]
+        shortDaysNames[(dayIndex + 1) % 7],
+        shortDaysNames[(dayIndex + 2) % 7],
+        shortDaysNames[(dayIndex + 3) % 7],
+        shortDaysNames[(dayIndex + 4) % 7],
       ];
 
       return nextDaysNames;
@@ -76,31 +104,14 @@ export default {
 
       this.temperatures = daysMinMaxTemp;
     },
-
-    updateNextDaysForecast() {
-      const weatherArray = this.$parent.$data.weatherArray;
-
-      if (weatherArray && Array.isArray(weatherArray) && weatherArray.length > 1) {
-        this.nextDays = [
-            weatherArray[2],
-            weatherArray[3],
-            weatherArray[4]
-        ]
-      }
-    },
-
-
   },
 
-  watch: {
-    '$parent.$data.weatherArray': {
-      handler(newValue) {
-        this.updateNextDaysForecast();
-        this.calcDayMinMaxTemp();
-      },
-      deep: true
+  mounted() {
+    if (this.nextDays) {
+      this.calcDayMinMaxTemp();
     }
-  },
+  }
+
 }
 </script>
 
