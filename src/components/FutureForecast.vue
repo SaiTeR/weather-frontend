@@ -1,5 +1,5 @@
 <template>
-  <div class="container" v-if="getFutureWeather">
+  <div class="container" v-if="temperatures">
     <div class="next-day-card">
       <p style="text-align: center">{{nextDaysNames[0]}}</p>
       <div style="display: flex; flex-direction: row">
